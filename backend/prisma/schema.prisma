@@ -1,0 +1,30 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Customer {
+  id        Int      @id @default(autoincrement())
+  name      String
+  phone     String
+  email     String   @unique
+  city      String
+  createdAt DateTime @default(now())
+  policies  Policy[]
+}
+
+model Policy {
+  id             Int      @id @default(autoincrement())
+  customerId     Int
+  customer       Customer @relation(fields: [customerId], references: [id])
+  policyType     String   @map("policy_type")
+  premiumAmount  Float    @map("premium_amount")
+  startDate      DateTime @map("start_date")
+  endDate        DateTime @map("end_date")
+  status         String   // active / expired
+  createdAt      DateTime @default(now())
+}
